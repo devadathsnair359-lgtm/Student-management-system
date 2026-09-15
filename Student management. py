@@ -1,0 +1,223 @@
+import json
+
+students = []
+
+
+def add_stud():
+    name = input("Enter name of student: ")
+    roll_num = int(input("Enter student's roll number: "))
+
+    marks = []
+
+    for sub in ["maths", "chemistry", "physics"]:
+        mark = int(input(f"Enter mark of {sub}: "))
+        marks.append(mark)
+
+    stud_detail = {
+        "Name": name,
+        "Roll Number": roll_num,
+        "Marks": marks
+    }
+
+    students.append(stud_detail)
+    print("Student successfully added")
+
+
+def view_stud():
+    if not students:
+        print("No students found")
+        return
+
+    for items in students:
+        print("\nName:", items["Name"])
+        print("Roll Number:", items["Roll Number"])
+        print("Maths:", items["Marks"][0])
+        print("Chemistry:", items["Marks"][1])
+        print("Physics:", items["Marks"][2])
+
+        average = sum(items["Marks"]) / len(items["Marks"])
+        print("Average:", average)
+
+        if average >= 90:
+            grade = "A"
+        elif average >= 80:
+            grade = "B"
+        elif average >= 70:
+            grade = "C"
+        elif average >= 60:
+            grade = "D"
+        elif average >= 40:
+            grade = "E"
+        else:
+            grade = "F"
+
+        print("Grade:", grade)
+
+
+def search_stud():
+    num = int(input("Enter roll number to search: "))
+    found = False
+
+    for items in students:
+        if items["Roll Number"] == num:
+            print("\nName:", items["Name"])
+            print("Roll Number:", items["Roll Number"])
+            print("Maths:", items["Marks"][0])
+            print("Chemistry:", items["Marks"][1])
+            print("Physics:", items["Marks"][2])
+            found = True
+
+    if found == False:
+        print("Couldn't find student")
+
+
+def delete_stud():
+    num = int(input("Enter roll number to delete: "))
+    found = False
+
+    for items in students:
+        if items["Roll Number"] == num:
+            students.remove(items)
+            print("Successfully deleted")
+            found = True
+            break
+
+    if found == False:
+        print("Couldn't find student")
+
+
+def average_stud():
+    if not students:
+        print("No students found")
+        return
+
+    for items in students:
+        average = sum(items["Marks"]) / len(items["Marks"])
+        print(items["Name"], "average:", average)
+
+
+def update():
+    if not students:
+        print("No students found")
+    else:
+        num = int(input("Enter the roll number to update student: "))
+        found = False
+
+        for items in students:
+            if items["Roll Number"] == num:
+
+                detail = input("Enter detail to update: ").lower()
+
+                if detail == "name":
+                    new_name = input("Enter the new name: ")
+                    items["Name"] = new_name
+
+                elif detail == "roll number":
+                    new_roll = int(input("Enter new roll number: "))
+                    items["Roll Number"] = new_roll
+
+                elif detail == "mark":
+                    subject = input(
+                        "Enter subject (maths/chemistry/physics): "
+                    ).lower()
+
+                    new_mark = int(input("Enter the new mark: "))
+
+                    if subject == "maths":
+                        items["Marks"][0] = new_mark
+
+                    elif subject == "chemistry":
+                        items["Marks"][1] = new_mark
+
+                    elif subject == "physics":
+                        items["Marks"][2] = new_mark
+
+                    else:
+                        print("Invalid subject")
+                        continue
+
+                else:
+                    print("Invalid choice")
+                    continue
+
+                found = True
+                print("Successfully updated")
+
+        if found == False:
+            print("Couldn't find student")
+
+
+def save():
+    with open("students.json", "w") as file:
+        json.dump(students, file)
+
+    print("Successfully saved")
+
+
+def load():
+    global students
+
+    try:
+        with open("students.json", "r") as file:
+            students = json.load(file)
+
+        print("Successfully loaded")
+
+    except FileNotFoundError:
+        print("Couldn't find students.json")
+
+
+	
+
+
+
+while True:
+    print("\n===== STUDENT MANAGEMENT SYSTEM =====")
+    print("1. Add student")
+    print("2. View students")
+    print("3. Search student")
+    print("4. Delete student")
+    print("5. Average")
+    print("6. Update student")
+    print("7. load")
+    print("8.  Save")
+    print("9. Exit")
+
+    choice = input("Enter choice: ")
+
+    if choice == "1":
+        add_stud()
+
+    elif choice == "2":
+        view_stud()
+
+    elif choice == "3":
+        search_stud()
+
+    elif choice == "4":
+        delete_stud()
+
+    elif choice == "5":
+        average_stud()
+
+    elif choice == "6":
+        update()
+
+    elif choice == "7":
+        load()
+
+    elif choice == "8":
+    	save()
+    
+    elif choice=="9":
+        choic=input("enter 8 to save an exit")
+        if choic=="8":
+        	save()
+        	print("Goodbye!")
+        	break
+        else:
+        	print("invalid ")
+
+    else:
+        print("Invalid choice")
+											
